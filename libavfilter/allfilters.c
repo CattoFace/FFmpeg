@@ -212,6 +212,7 @@ extern const AVFilter ff_vf_chromanr;
 extern const AVFilter ff_vf_chromashift;
 extern const AVFilter ff_vf_ciescope;
 extern const AVFilter ff_vf_codecview;
+extern const AVFilter ff_vf_printmvs;
 extern const AVFilter ff_vf_colorbalance;
 extern const AVFilter ff_vf_colorchannelmixer;
 extern const AVFilter ff_vf_colorcontrast;
@@ -610,36 +611,33 @@ extern const AVFilter ff_avsrc_movie;
  * they are formatted to not be found by the grep
  * as they are manually added again (due to their 'names'
  * being the same while having different 'types'). */
-extern  const AVFilter ff_asrc_abuffer;
-extern  const AVFilter ff_vsrc_buffer;
-extern  const AVFilter ff_asink_abuffer;
-extern  const AVFilter ff_vsink_buffer;
+extern const AVFilter ff_asrc_abuffer;
+extern const AVFilter ff_vsrc_buffer;
+extern const AVFilter ff_asink_abuffer;
+extern const AVFilter ff_vsink_buffer;
 
 #include "libavfilter/filter_list.c"
 
+const AVFilter *av_filter_iterate(void **opaque) {
+  uintptr_t i = (uintptr_t)*opaque;
+  const AVFilter *f = filter_list[i];
 
-const AVFilter *av_filter_iterate(void **opaque)
-{
-    uintptr_t i = (uintptr_t)*opaque;
-    const AVFilter *f = filter_list[i];
+  if (f)
+    *opaque = (void *)(i + 1);
 
-    if (f)
-        *opaque = (void*)(i + 1);
-
-    return f;
+  return f;
 }
 
-const AVFilter *avfilter_get_by_name(const char *name)
-{
-    const AVFilter *f = NULL;
-    void *opaque = 0;
+const AVFilter *avfilter_get_by_name(const char *name) {
+  const AVFilter *f = NULL;
+  void *opaque = 0;
 
-    if (!name)
-        return NULL;
-
-    while ((f = av_filter_iterate(&opaque)))
-        if (!strcmp(f->name, name))
-            return f;
-
+  if (!name)
     return NULL;
+
+  while ((f = av_filter_iterate(&opaque)))
+    if (!strcmp(f->name, name))
+      return f;
+
+  return NULL;
 }
