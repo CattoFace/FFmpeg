@@ -48,7 +48,7 @@ typedef struct PrintMVsContext {
 #define CONST(name, help, val, unit)                                           \
   { name, help, 0, AV_OPT_TYPE_CONST, {.i64 = val}, 0, 0, FLAGS, unit }
 
-static const AVOption printmvs_options[] = {{nullptr}};
+static const AVOption printmvs_options[] = {{NULL}};
 
 AVFILTER_DEFINE_CLASS(printmvs);
 
